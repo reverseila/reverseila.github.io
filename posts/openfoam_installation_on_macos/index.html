@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Installing OpenFOAM (ESI v2206) on an M1 Mac | Ali&#39;s blog</title>
+<meta name="keywords" content="OpenFOAM, swak4Foam">
+<meta name="description" content="Case-sensitivity Nowadays, Apple Macbooks don’t ship with a case-sensitive file system. However, the OpenFOAM source code heavily uses case-sensitive names for conveying different meanings. We first need to create acase-sensitive partition/volume. For that, we use the Disk Utility program, per below.
+Provide a name (This will be your FOAM_INST_DIR directory which contains all OpenFOAM installations). Here I specified it as OpenFOAM. For the format, we need to choose a case-sensitive format (In this case, APFS (case-sensitive)).">
+<meta name="author" content="">
+<link rel="canonical" href="http://reverseila.github.io/posts/openfoam_installation_on_macos/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.b183800e2cfbb62c3bce2b2ba56cdb2dd33af76c75cf4550173d5dfebd7c68a6.css" integrity="sha256-sYOADiz7tiw7zisrpWzbLdM692x1z0VQFz1d/r18aKY=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://reverseila.github.io/favicon/favicon.ico" type="image/x-icon">
+<link rel="icon" type="image/png" sizes="16x16" href="http://reverseila.github.io/favicon/favicon-16x16.png" type="image/x-icon">
+<link rel="icon" type="image/png" sizes="32x32" href="http://reverseila.github.io/favicon/favicon-32x32.png" type="image/x-icon">
+<link rel="apple-touch-icon" href="http://reverseila.github.io/favicon/apple-touch-icon.png" type="image/x-icon">
+<link rel="mask-icon" href="http://reverseila.github.io/favicon/favicon.ico" type="image/x-icon">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+</noscript><meta property="og:title" content="Installing OpenFOAM (ESI v2206) on an M1 Mac" />
+<meta property="og:description" content="Case-sensitivity Nowadays, Apple Macbooks don’t ship with a case-sensitive file system. However, the OpenFOAM source code heavily uses case-sensitive names for conveying different meanings. We first need to create acase-sensitive partition/volume. For that, we use the Disk Utility program, per below.
+Provide a name (This will be your FOAM_INST_DIR directory which contains all OpenFOAM installations). Here I specified it as OpenFOAM. For the format, we need to choose a case-sensitive format (In this case, APFS (case-sensitive))." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://reverseila.github.io/posts/openfoam_installation_on_macos/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2022-09-23T14:04:20+03:30" />
+<meta property="article:modified_time" content="2022-09-23T14:04:20+03:30" /><meta property="og:site_name" content="Ali&#39;s Blog" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Installing OpenFOAM (ESI v2206) on an M1 Mac"/>
+<meta name="twitter:description" content="Case-sensitivity Nowadays, Apple Macbooks don’t ship with a case-sensitive file system. However, the OpenFOAM source code heavily uses case-sensitive names for conveying different meanings. We first need to create acase-sensitive partition/volume. For that, we use the Disk Utility program, per below.
+Provide a name (This will be your FOAM_INST_DIR directory which contains all OpenFOAM installations). Here I specified it as OpenFOAM. For the format, we need to choose a case-sensitive format (In this case, APFS (case-sensitive))."/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "http://reverseila.github.io/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Installing OpenFOAM (ESI v2206) on an M1 Mac",
+      "item": "http://reverseila.github.io/posts/openfoam_installation_on_macos/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Installing OpenFOAM (ESI v2206) on an M1 Mac",
+  "name": "Installing OpenFOAM (ESI v2206) on an M1 Mac",
+  "description": "Case-sensitivity Nowadays, Apple Macbooks don’t ship with a case-sensitive file system. However, the OpenFOAM source code heavily uses case-sensitive names for conveying different meanings. We first need to create acase-sensitive partition/volume. For that, we use the Disk Utility program, per below.\nProvide a name (This will be your FOAM_INST_DIR directory which contains all OpenFOAM installations). Here I specified it as OpenFOAM. For the format, we need to choose a case-sensitive format (In this case, APFS (case-sensitive)).",
+  "keywords": [
+    "OpenFOAM", "swak4Foam"
+  ],
+  "articleBody": " Case-sensitivity Nowadays, Apple Macbooks don’t ship with a case-sensitive file system. However, the OpenFOAM source code heavily uses case-sensitive names for conveying different meanings. We first need to create acase-sensitive partition/volume. For that, we use the Disk Utility program, per below.\nProvide a name (This will be your FOAM_INST_DIR directory which contains all OpenFOAM installations). Here I specified it as OpenFOAM. For the format, we need to choose a case-sensitive format (In this case, APFS (case-sensitive)).\nNow, we have a partition on our disk with a case-sensitive file system. It is mounted on /Volumes/OpenFOAM, but navigating there is a bit inconvenient. To have it in the HOME directory, we create a symbolic link.\nln -s /Volumes/OpenFOAM $HOME/OpenFOAM Installing Prerequisites using Homebrew brew install git cmake open-mpi libomp bear paraview git: to clone (download) source code and applying patch (for swak4Foam) cmake: to make build files to be consumed by make openmpi, libomp: Runtime parallel libraries (for parallel runs and …) bear: Generate compilation database for clang tooling (clangd) paraview: Data analysis and visualization application Get the Source Code We can grab the source code by cloning the git repository from GitLab\ngit clone https://develop.openfoam.com/Development/openfoam This clone is pointing to the development branch. However, here I’ll choose the latest “stable” version, the OpenFOAM-v2206.\nmv openfoam OpenFOAM-v2206 cd $_ git checkout OpenFOAM-v2206 Shell config (Optional) Now that we have the desired version, we can tweak a bunch of settings and files before proceeding to build OpenFOAM. Note that we should not edit config files under the version control because those changes will be discarded upon updates (for example, using git pull). OpenFOAM suggests putting a user-defined configuration in the $HOME/.OpenFOAM directory. We also create the 2206 in that directory to make it version-specific.\nmkdir -p $HOME/.OpenFOAM/2206 Next, put your desired config there. Here’s mine\n# Setting the size of `label` to 64 bit export WM_LABEL_SIZE=64 # If you want to debug your code export WM_COMPILE_OPTION=Debug # Some usefull aliases alias foamfv='cd $FOAM_SRC/finiteVolume' alias foamsrc='cd $FOAM_SRC/OpenFOAM' alias foam3rdParty='cd $WM_THIRD_PARTY_DIR' alias paraFOAM='paraFOAM -builtin' Also, we need to get rid of one compiler warning, -Wunsupported-floating-point-opt. For that we edit the file $WM_PROJECT_DIR/wmake/rules/general/Clang/c++ and add the Wno-unsupported-floating-point-opt to the end of c++WARN variable. (Notice the \\ at the line after the -Wno-unknown-warning-option)\n# ~~~ c++WARN = \\ -Wall -Wextra -Wold-style-cast \\ -Wnon-virtual-dtor -Wno-unused-parameter -Wno-invalid-offsetof \\ -Wno-undefined-var-template \\ -Wno-unknown-warning-option \\ -Wno-unsupported-floating-point-opt # ~~~ I couldn’t find a way to add this flag in a file in the $HOME/.OpenFOAM directory.\nBuild First, we navigate to the OpenFOAM-v2206 and load the OpenFOAM environment\ncd ~/OpenFOAM/OpenFOAM-v2206/ source etc/bashrc Then we run the foamSystemCheck shell script to check the machine, software components, and the environment for installing OpenFOAM\nfoamSystemCheck Hopefully, it won’t create any errors because I didn’t face any! ;).\nNext, we run the installation script, Allwmake, with a few flags\n./Allwmake -j -s -l -with-bear You can check what is the meaning of these flags with wmake -helpcommand -with-bear is optional unless you are using an LSP -j will utilize all your CPU cores. To only use a certain number of cores: -j 2 If the build has finished without any fatal errors, installation can be tested with the following command\nfoamInstallationTest swak4Foam To install the swak4Foam package on macOS, first, we need to patch it.\ncurl https://gist.githubusercontent.com/reverseila/39101060b5f05d9b2d2d151a39fda158/raw/eca1be96c534ae0eb4938c5491028d8d7838328b/swak4Foam.patch | git apply Then, we need to install three more prerequisites. bison on macOS is outdated for building swak4Foam. So we install a new version of bison with homebrew and add it to PATH\nbrew install bison pkgconfig export PATH=\"$(brew --prefix)/opt/bison/bin:$PATH\" bison: Parser generator pkgconfig: Manage compile and link flags for libraries Further, The xargs utility used inside the scripts of the swak4FOAM uses a specific feature of the GNU version of xargs that produces an error with macOS version of xargs. We need to install the findutils package and add it to PATH.\nbrew install findutils export PATH=\"/opt/homebrew/opt/findutils/libexec/gnubin:$PATH\" Next, we build it\n./AllwmakeAll 2\u003e\u00261 | tee log.AllwmakeAll We can test the installation by running a swak4Foam utility. For example\nfunkySetFields -help Resources: OpenFOAM ESI group BrushXue/OpenFOAM-AppleM1 OpenFOAM Configuration System ",
+  "wordCount" : "679",
+  "inLanguage": "en",
+  "datePublished": "2022-09-23T14:04:20+03:30",
+  "dateModified": "2022-09-23T14:04:20+03:30",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "http://reverseila.github.io/posts/openfoam_installation_on_macos/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Ali's blog",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "http://reverseila.github.io/favicon/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    }
+
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="http://reverseila.github.io/" accesskey="h" title="Ali&#39;s blog (Alt + H)">Ali&#39;s blog</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="http://reverseila.github.io/archives/" title="Archives">
+                    <span>Archives</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://reverseila.github.io/tags/" title="Tags">
+                    <span>Tags</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    
+    <h1 class="post-title">
+      Installing OpenFOAM (ESI v2206) on an M1 Mac
+    </h1>
+    <div class="post-meta"><span title='2022-09-23 14:04:20 +0330 +0330'>September 23, 2022</span>&nbsp;·&nbsp;4 min&nbsp;·&nbsp;679 words
+
+</div>
+  </header> 
+  <div class="post-content"><!-- raw HTML omitted -->
+<h2 id="case-sensitivity">Case-sensitivity<a hidden class="anchor" aria-hidden="true" href="#case-sensitivity">#</a></h2>
+<p>Nowadays, Apple Macbooks don’t ship with a case-sensitive file system.
+However, the OpenFOAM source code heavily uses case-sensitive names for conveying different meanings.
+We first need to create acase-sensitive partition/volume.
+For that, we use the Disk Utility program, per below.</p>
+<p><img loading="lazy" src="/img/openfoam_installation_disk_utility.png" alt="The selected settings for Disk Utility"  />
+</p>
+<p>Provide a name (This will be your <code>FOAM_INST_DIR</code> directory which contains all OpenFOAM installations).
+Here I specified it as <code>OpenFOAM</code>.
+For the format, we need to choose a <strong>case-sensitive</strong> format (In this case, <code>APFS (case-sensitive)</code>).</p>
+<p>Now, we have a partition on our disk with a case-sensitive file system.
+It is mounted on <code>/Volumes/OpenFOAM</code>, but navigating there is a bit inconvenient.
+To have it in the <code>HOME</code> directory, we create a symbolic link.</p>
+<pre tabindex="0"><code>ln -s /Volumes/OpenFOAM $HOME/OpenFOAM
+</code></pre><!-- raw HTML omitted -->
+<h2 id="installing-prerequisites-using-homebrew">Installing Prerequisites using Homebrew<a hidden class="anchor" aria-hidden="true" href="#installing-prerequisites-using-homebrew">#</a></h2>
+<pre tabindex="0"><code>brew install git cmake open-mpi libomp bear paraview
+</code></pre><blockquote>
+<ul>
+<li><code>git</code>: to clone (download) source code and applying patch (for swak4Foam)</li>
+<li><code>cmake</code>: to make build files to be consumed by make</li>
+<li><code>openmpi</code>, <code>libomp</code>: Runtime parallel libraries (for parallel runs and &hellip;)</li>
+<li><code>bear</code>: Generate compilation database for clang tooling (clangd)</li>
+<li><code>paraview</code>: Data analysis and visualization application</li>
+</ul>
+</blockquote>
+<!-- raw HTML omitted -->
+<h2 id="get-the-source-code">Get the Source Code<a hidden class="anchor" aria-hidden="true" href="#get-the-source-code">#</a></h2>
+<p>We can grab the source code by cloning the git repository from GitLab</p>
+<pre tabindex="0"><code>git clone https://develop.openfoam.com/Development/openfoam
+</code></pre><p>This clone is pointing to the development branch.
+However, here I’ll choose the latest &ldquo;stable&rdquo; version, the <code>OpenFOAM-v2206</code>.</p>
+<pre tabindex="0"><code>mv openfoam OpenFOAM-v2206
+cd $_
+git checkout OpenFOAM-v2206
+</code></pre><!-- raw HTML omitted -->
+<h2 id="shell-config-optional">Shell config (Optional)<a hidden class="anchor" aria-hidden="true" href="#shell-config-optional">#</a></h2>
+<p>Now that we have the desired version,
+we can tweak a bunch of settings and files before proceeding to build OpenFOAM.
+Note that we should not edit config files under the version control
+because those changes will be discarded upon updates (for example, using <code>git pull</code>).
+OpenFOAM
+<a href="https://develop.openfoam.com/Development/openfoam/-/wikis/configuring">suggests</a>
+putting a user-defined configuration in the <code>$HOME/.OpenFOAM</code> directory.
+We also create the <code>2206</code> in that directory to make it version-specific.</p>
+<pre tabindex="0"><code>mkdir -p $HOME/.OpenFOAM/2206
+</code></pre><p>Next, put your desired config there. Here&rsquo;s mine</p>
+<pre tabindex="0"><code># Setting the size of `label` to 64 bit
+export WM_LABEL_SIZE=64
+
+# If you want to debug your code
+export WM_COMPILE_OPTION=Debug
+
+# Some usefull aliases
+alias foamfv=&#39;cd $FOAM_SRC/finiteVolume&#39;
+alias foamsrc=&#39;cd $FOAM_SRC/OpenFOAM&#39;
+alias foam3rdParty=&#39;cd $WM_THIRD_PARTY_DIR&#39;
+alias paraFOAM=&#39;paraFOAM -builtin&#39;
+</code></pre><p>Also, we need to get rid of one compiler warning,
+<code>-Wunsupported-floating-point-opt</code>. For that we edit the file
+<code>$WM_PROJECT_DIR/wmake/rules/general/Clang/c++</code> and add the
+<code>Wno-unsupported-floating-point-opt</code> to the end of <code>c++WARN</code>
+variable. (Notice the <code>\</code> at the line after the
+<code>-Wno-unknown-warning-option</code>)</p>
+<pre tabindex="0"><code># ~~~
+c++WARN     = \
+    -Wall -Wextra -Wold-style-cast \
+    -Wnon-virtual-dtor -Wno-unused-parameter -Wno-invalid-offsetof \
+    -Wno-undefined-var-template \
+    -Wno-unknown-warning-option \
+    -Wno-unsupported-floating-point-opt
+# ~~~
+</code></pre><blockquote>
+<p>I couldn&rsquo;t find a way to add this flag in a file in the <code>$HOME/.OpenFOAM</code> directory.</p>
+</blockquote>
+<!-- raw HTML omitted -->
+<h2 id="build">Build<a hidden class="anchor" aria-hidden="true" href="#build">#</a></h2>
+<p>First, we navigate to the <code>OpenFOAM-v2206</code> and load the OpenFOAM environment</p>
+<pre tabindex="0"><code>cd ~/OpenFOAM/OpenFOAM-v2206/
+source etc/bashrc
+</code></pre><p>Then we run the <code>foamSystemCheck</code> shell script to check the
+machine, software components, and the environment for installing
+OpenFOAM</p>
+<pre tabindex="0"><code>foamSystemCheck
+</code></pre><blockquote>
+<p>Hopefully, it won’t create any errors because I didn’t face any! ;).</p>
+</blockquote>
+<p>Next, we run the installation script, <code>Allwmake</code>, with a few flags</p>
+<pre tabindex="0"><code>./Allwmake -j -s -l -with-bear
+</code></pre><blockquote>
+<ul>
+<li>You can check what is the meaning of these flags with <code>wmake -help</code>command</li>
+<li><code>-with-bear</code> is optional unless you are using an <code>LSP</code></li>
+<li><code>-j</code> will utilize all your CPU cores. To only use a certain number of cores: <code>-j 2</code></li>
+</ul>
+</blockquote>
+<p>If the build has finished without any fatal errors, installation can
+be tested with the following command</p>
+<pre tabindex="0"><code>foamInstallationTest
+</code></pre><!-- raw HTML omitted -->
+<h2 id="swak4foam">swak4Foam<a hidden class="anchor" aria-hidden="true" href="#swak4foam">#</a></h2>
+<p>To install the swak4Foam package on macOS, first, we need to patch it.</p>
+<pre tabindex="0"><code>curl https://gist.githubusercontent.com/reverseila/39101060b5f05d9b2d2d151a39fda158/raw/eca1be96c534ae0eb4938c5491028d8d7838328b/swak4Foam.patch | git apply
+</code></pre><p>Then, we need to install three more prerequisites. <code>bison</code> on macOS is
+outdated for building swak4Foam. So we install a new version of
+<code>bison</code> with homebrew and add it to <code>PATH</code></p>
+<pre tabindex="0"><code>brew install bison pkgconfig
+export PATH=&#34;$(brew --prefix)/opt/bison/bin:$PATH&#34;
+</code></pre><blockquote>
+<ul>
+<li><code>bison</code>: Parser generator</li>
+<li><code>pkgconfig</code>: Manage compile and link flags for libraries</li>
+</ul>
+</blockquote>
+<p>Further, The <code>xargs</code> utility used inside the scripts of the
+<code>swak4FOAM</code> uses a specific feature of the GNU version of <code>xargs</code> that
+produces an error with macOS version of <code>xargs</code>.
+We need to install the <code>findutils</code> package and add it to <code>PATH</code>.</p>
+<pre tabindex="0"><code>brew install findutils
+
+export PATH=&#34;/opt/homebrew/opt/findutils/libexec/gnubin:$PATH&#34;
+</code></pre><p>Next, we build it</p>
+<pre tabindex="0"><code>./AllwmakeAll 2&gt;&amp;1 | tee log.AllwmakeAll
+</code></pre><p>We can test the installation by running a swak4Foam utility. For example</p>
+<pre tabindex="0"><code>funkySetFields -help
+</code></pre><!-- raw HTML omitted -->
+<h2 id="resources">Resources:<a hidden class="anchor" aria-hidden="true" href="#resources">#</a></h2>
+<ol>
+<li><a href="https://develop.openfoam.com/Development/openfoam">OpenFOAM ESI group</a></li>
+<li><a href="https://github.com/BrushXue/OpenFOAM-AppleM1">BrushXue/OpenFOAM-AppleM1</a></li>
+<li><a href="https://develop.openfoam.com/Development/openfoam/-/wikis/configuring">OpenFOAM Configuration System</a></li>
+</ol>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="http://reverseila.github.io/tags/openfoam/">OpenFOAM</a></li>
+      <li><a href="http://reverseila.github.io/tags/swak4foam/">swak4Foam</a></li>
+    </ul>
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+    <span>&copy; 2022 <a href="http://reverseila.github.io/">Ali&#39;s blog</a></span>
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>
